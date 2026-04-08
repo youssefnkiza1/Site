@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Youssef Nkiza — IT Infrastructure Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --accent: #00e5b0;
+    --accent2: #7b5ea7;
+    --text: #f0eef8;
+    --muted: #7a7890;
+    --border: rgba(255,255,255,0.07);
+    --card: rgba(255,255,255,0.03);
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-head);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  #cursor-trail {
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease, top 0.12s ease, opacity 0.3s;
+    opacity: 0.4;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+  }
+  .nav-logo {
+    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.03em;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-family: var(--font-mono); font-size: 0.75rem;
+    color: var(--muted); text-decoration: none;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+    background: var(--accent); transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-family: var(--font-mono); font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--bg); background: var(--accent);
+    border: none; padding: 0.6rem 1.4rem;
+    cursor: none; transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,176,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,176,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute; top: 20%; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,176,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; text-align: center; max-width: 900px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.72rem;
+    color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid rgba(0,229,176,0.3);
+    padding: 0.4rem 1rem; margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-name .first { color: var(--text); }
+  .hero-name .last {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(240,238,248,0.3);
+  }
+  .hero-name .accent { color: var(--accent); }
+
+  .hero-role {
+    font-family: var(--font-mono); font-size: 1.1rem;
+    color: var(--muted); letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem; color: rgba(240,238,248,0.6);
+    line-height: 1.7; max-width: 560px; margin: 0 auto 3rem;
+    font-weight: 400;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; justify-content: center;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .btn-primary {
+    padding: 0.85rem 2.2rem;
+    background: var(--accent); color: var(--bg);
+    font-family: var(--font-mono); font-size: 0.78rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-weight: 400;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,229,176,0.3);
+  }
+  .btn-secondary {
+    padding: 0.85rem 2.2rem;
+    background: transparent; color: var(--text);
+    font-family: var(--font-mono); font-size: 0.78rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; border: 1px solid var(--border);
+    cursor: none; transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.65rem;
+    color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 40px; background: linear-gradient(var(--accent), transparent);
+    animation: scrollAnim 1.5s ease infinite;
+  }
+  @keyframes scrollAnim {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item {
+    padding: 2rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: var(--card); }
+  .stat-num {
+    font-size: 2.5rem; font-weight: 800; line-height: 1;
+    color: var(--accent); letter-spacing: -0.04em;
+  }
+  .stat-label {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-top: 0.4rem;
+  }
+
+  /* Section layout */
+  section { padding: 6rem 4rem; position: relative; }
+  .section-header { margin-bottom: 4rem; }
+  .section-index {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05;
+  }
+  .section-title .outline {
+    color: transparent; -webkit-text-stroke: 1px rgba(240,238,248,0.2);
+  }
+
+  /* About */
+  #about { background: var(--bg2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+  .about-text p {
+    font-size: 1.05rem; color: rgba(240,238,248,0.65);
+    line-height: 1.8; margin-bottom: 1.2rem; font-weight: 400;
+  }
+  .about-text strong { color: var(--accent); font-weight: 600; }
+  .about-details { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2.5rem; }
+  .detail-row {
+    display: flex; gap: 1rem; align-items: baseline;
+    font-family: var(--font-mono); font-size: 0.82rem;
+  }
+  .detail-label { color: var(--muted); min-width: 80px; text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.08em; }
+  .detail-val { color: var(--text); }
+  .detail-val a { color: var(--accent); text-decoration: none; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.2rem 1.4rem;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .skill-card:hover {
+    border-color: rgba(0,229,176,0.3);
+    background: rgba(0,229,176,0.04);
+  }
+  .skill-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+  .skill-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+  .skill-detail {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* Experience */
+  #experience { background: var(--bg); }
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid; grid-template-columns: 200px 1fr;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    transition: background 0.3s;
+    gap: 4rem;
+  }
+  .exp-item:hover { background: var(--card); margin: 0 -4rem; padding: 2.5rem 4rem; }
+  .exp-meta { padding-top: 0.2rem; }
+  .exp-date {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--accent); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+  .exp-loc {
+    font-family: var(--font-mono); font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .exp-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
+  .exp-company { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .exp-bullets li {
+    font-size: 0.9rem; color: rgba(240,238,248,0.6);
+    line-height: 1.6; padding-left: 1.2rem; position: relative;
+    font-weight: 400;
+  }
+  .exp-bullets li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--accent); font-size: 0.75rem;
+  }
+
+  /* Education */
+  #education { background: var(--bg2); }
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .edu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem 2.2rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .edu-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 3px; height: 100%;
+    background: var(--accent);
+  }
+  .edu-card:hover { border-color: rgba(0,229,176,0.3); }
+  .edu-degree { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+  .edu-spec { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); margin-bottom: 0.8rem; }
+  .edu-date { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .edu-desc { font-size: 0.875rem; color: rgba(240,238,248,0.55); line-height: 1.6; font-weight: 400; }
+
+  /* Languages & skills visual */
+  #languages { background: var(--bg); }
+  .lang-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem; }
+  .lang-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 1.8rem 2rem;
+    transition: border-color 0.3s;
+  }
+  .lang-card:hover { border-color: rgba(0,229,176,0.3); }
+  .lang-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
+  .lang-level { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .lang-dots { display: flex; gap: 6px; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    transition: opacity 0.3s;
+  }
+  .dot.empty { background: var(--border); border: 1px solid rgba(255,255,255,0.1); }
+
+  /* Tech stack */
+  .tech-title {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .tech-tag {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    color: var(--muted); border: 1px solid var(--border);
+    padding: 0.4rem 0.9rem; letter-spacing: 0.06em;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tech-tag:hover { color: var(--accent); border-color: rgba(0,229,176,0.4); }
+
+  /* Contact */
+  #contact {
+    background: var(--bg2);
+    text-align: center;
+  }
+  .contact-inner { max-width: 640px; margin: 0 auto; }
+  .contact-big {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 800; letter-spacing: -0.04em;
+    line-height: 1.05; margin-bottom: 1.5rem;
+  }
+  .contact-big .outline {
+    color: transparent; -webkit-text-stroke: 1px rgba(240,238,248,0.2);
+  }
+  .contact-sub {
+    font-family: var(--font-mono); font-size: 0.85rem;
+    color: var(--muted); margin-bottom: 3rem; line-height: 1.6;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    color: var(--text); text-decoration: none;
+    border: 1px solid var(--border); padding: 0.75rem 1.4rem;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .contact-link:hover { color: var(--accent); border-color: rgba(0,229,176,0.4); }
+  .contact-link .icon { color: var(--accent); font-size: 1rem; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Highlight line */
+  .hl { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .exp-item:hover { margin: 0; padding: 2.5rem 0; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .lang-grid { grid-template-columns: 1fr 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    #hero { padding: 6rem 1.5rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">Y<span>.</span>Nkiza</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#education">Education</a>
+    <a href="#languages">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a class="nav-cta" href="https://youssefnkiza1.github.io/Resume/CV_Youssef_Nkiza_Portfolio.pdf" target="_blank">Resume/CV</a>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for work · Essaouira, Morocco</div>
+    <h1 class="hero-name">
+      <span class="first">Youssef</span><br>
+      <span class="last">Nk</span><span class="accent">iza</span>
+    </h1>
+    <p class="hero-role">IT Infrastructure &amp; Systems Specialist · Digital &amp; Community</p>
+    <p class="hero-desc">
+      Specialized IT technician with hands-on experience in network administration,
+      systems maintenance, and digital marketing. Cisco-certified. Ready to secure and
+      optimize your information systems.
+    </p>
+    <div class="hero-actions">
+      <a href="view my work.html" class="btn-primary">View my work</a>
+      <a href="#contact" class="btn-secondary">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-item reveal">
+    <div class="stat-num">5+</div>
+    <div class="stat-label">Experiences</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">2y</div>
+    <div class="stat-label">DTS Training</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Languages</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num">21</div>
+    <div class="stat-label">Years old</div>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="section-header reveal">
+    <div class="section-index">01 — About</div>
+    <h2 class="section-title">Who I <span class="outline">am</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I'm a <strong>Specialized IT Technician</strong> focused on Digital Infrastructure,
+        Systems & Networks. Motivated by problem-solving and driven by precision, I bring a
+        rare mix of technical depth and creative communication skills.
+      </p>
+      <p>
+        With completed <strong>Cisco training</strong>, I have solid foundations in routing,
+        switching, and infrastructure maintenance. I also thrive in digital environments —
+        community management, content creation, and social media strategy are part of my toolkit.
+      </p>
+      <p>
+        Known for rigor and initiative, I'm ready to guarantee the security and efficiency
+        of your information systems within a dynamic technical team.
+      </p>
+      <div class="about-details">
+        <div class="detail-row"><span class="detail-label">Location</span><span class="detail-val">Essaouira, Morocco</span></div>
+        <div class="detail-row"><span class="detail-label">Email</span><span class="detail-val"><a href="mailto:nkizayoussef@gmail.com">nkizayoussef@gmail.com</a></span></div>
+        <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">0612 200 129</span></div>
+      </div>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-icon">🖧</div>
+        <div class="skill-name">Sys & Network Admin</div>
+        <div class="skill-detail">DHCP · DNS · Active Directory</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⚙️</div>
+        <div class="skill-name">Infrastructure</div>
+        <div class="skill-detail">Routing · Switching · Maintenance</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">💻</div>
+        <div class="skill-name">IT Support</div>
+        <div class="skill-detail">Hardware · Software · Troubleshooting</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📱</div>
+        <div class="skill-name">Digital & Community</div>
+        <div class="skill-detail">Social Media · Content · Marketing</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">Web & Digital</div>
+        <div class="skill-detail">Web management · CMS · SEO basics</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🎨</div>
+        <div class="skill-name">Graphic Design</div>
+        <div class="skill-detail">Posters · Branding · Visual content</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-header reveal">
+    <div class="section-index">02 — Experience</div>
+    <h2 class="section-title">Work <span class="outline">history</span></h2>
+  </div>
+  <div class="exp-list">
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-date">Jan 2024 – Present</div>
+        <div class="exp-loc">Essaouira, Morocco</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Designer & Community Manager</div>
+        <div class="exp-company">Moustakbal Mogador (Basketball Club)</div>
+        <ul class="exp-bullets">
+          <li>Visual content creation and graphic design for club communications.</li>
+          <li>Social media management to grow engagement and connect with supporters.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-date">May 2025 – Jul 2025</div>
+        <div class="exp-loc">Essaouira, Morocco</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Digital Marketing & Technical Support</div>
+        <div class="exp-company">CHAMA Restaurant</div>
+        <ul class="exp-bullets">
+          <li>Orchestrated digital marketing initiatives and social media management.</li>
+          <li>Created promotional content to attract new clientele.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-date">Dec 2023 – Apr 2025</div>
+        <div class="exp-loc">Essaouira, Morocco</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Community Manager</div>
+        <div class="exp-company">Local Football Team</div>
+        <ul class="exp-bullets">
+          <li>Managed team reputation and created editorial content.</li>
+          <li>Graphic design for match posters and promotional materials.</li>
+          <li>Grew fan engagement through strategic community interaction.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-date">Jun 2023 – Dec 2024</div>
+        <div class="exp-loc">Essaouira, Morocco</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">IT Support & Digital</div>
+        <div class="exp-company">Association SANAD — Hôpital Provincial d'Essaouira</div>
+        <ul class="exp-bullets">
+          <li>Technical support for an NGO operating within a hospital environment.</li>
+          <li>Management of official website and social media (updates, moderation).</li>
+          <li>Digital communications and online community management.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-date">May 2025</div>
+        <div class="exp-loc">Essaouira, Morocco</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-title">Systems & Networks Intern</div>
+        <div class="exp-company">Hôpital Provincial d'Essaouira</div>
+        <ul class="exp-bullets">
+          <li>Hands-on internship focused on IT systems maintenance.</li>
+          <li>Network troubleshooting and infrastructure management support.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+  <div class="section-header reveal">
+    <div class="section-index">03 — Education</div>
+    <h2 class="section-title">Academic <span class="outline">background</span></h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-degree">Diplôme de Technicien Spécialisé (DTS)</div>
+      <div class="edu-spec">Infrastructure Digitale · Systèmes & Réseaux</div>
+      <div class="edu-date">Sep 2023 – Jun 2025 · Essaouira, Morocco</div>
+      <div class="edu-desc">Two-year technical program covering network administration, cybersecurity, hardware & software maintenance, and network services including DHCP, DNS, and Active Directory.</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-degree">Baccalauréat Sciences Physiques</div>
+      <div class="edu-spec">Mention Assez Bien</div>
+      <div class="edu-date">Sep 2022 – Sep 2023 · Essaouira, Morocco</div>
+      <div class="edu-desc">Scientific high school diploma with a distinction, building strong analytical and problem-solving foundations applied to IT studies.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Languages & Skills -->
+<section id="languages">
+  <div class="section-header reveal">
+    <div class="section-index">04 — Skills & Languages</div>
+    <h2 class="section-title">Capabilities <span class="outline">&amp; tools</span></h2>
+  </div>
+
+  <div class="lang-grid reveal">
+    <div class="lang-card">
+      <div class="lang-name">Arabic</div>
+      <div class="lang-level">Native</div>
+      <div class="lang-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-name">English</div>
+      <div class="lang-level">Intermediate</div>
+      <div class="lang-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot empty"></div><div class="dot empty"></div>
+      </div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-name">French</div>
+      <div class="lang-level">Intermediate</div>
+      <div class="lang-dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot empty"></div><div class="dot empty"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="tech-title">Technical toolkit</div>
+    <div class="tech-tags">
+      <span class="tech-tag">Routing & Switching</span>
+      <span class="tech-tag">Active Directory</span>
+      <span class="tech-tag">DHCP / DNS</span>
+      <span class="tech-tag">Network Troubleshooting</span>
+      <span class="tech-tag">Cisco (trained)</span>
+      <span class="tech-tag">Windows Server</span>
+      <span class="tech-tag">Hardware Maintenance</span>
+      <span class="tech-tag">IT Support</span>
+      <span class="tech-tag">Social Media Management</span>
+      <span class="tech-tag">Graphic Design</span>
+      <span class="tech-tag">Content Creation</span>
+      <span class="tech-tag">Digital Marketing</span>
+      <span class="tech-tag">Community Management</span>
+      <span class="tech-tag">Web Management</span>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <div class="section-index" style="text-align:center; margin-bottom:1rem;">05 — Contact</div>
+    <h2 class="contact-big">Let's <span class="outline">work</span><br>together</h2>
+    <p class="contact-sub">
+      I'm actively looking for opportunities in IT infrastructure, systems & networks,
+      or digital roles. Feel free to reach out — I respond fast.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:nkizayoussef@gmail.com" class="contact-link">
+        <span class="icon"><i class="fa-solid fa-envelope"></i></span> nkizayoussef@gmail.com
+      </a>
+      <a href="tel:0612200129" class="contact-link">
+        <span class="icon"><i class="fa-solid fa-phone"></i></span> 0612 200 129
+      </a>
+      <a href="https://www.instagram.com/1v4_ysf" target="_blank" class="contact-link">
+        <span class="icon"><i class="fa-brands fa-instagram"></i></span> 1v4_ysf
+      </a>
+      <a href="https://github.com/youssefnkiza1" target="_blank" class="contact-link">
+        <span class="icon"><i class="fa-brands fa-github"></i></span> youssefnkiza1
+      </a>
+      <a href="https://web.facebook.com/youssef.nkiza" target="_blank" class="contact-link">
+        <span class="icon"><i class="fa-brands fa-facebook"></i></span> Youssef Nkiza
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Youssef Nkiza</span>
+  <span>IT Infrastructure Specialist · Essaouira, Morocco</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    trail.style.left = e.clientX + 'px';
+    trail.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .skill-card, .exp-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+      trail.style.opacity = '0.8';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      trail.style.opacity = '0.4';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
