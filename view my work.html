@@ -72,7 +72,7 @@
 <div class="work-card reveal" data-category="design poster">
     <div class="work-preview">
         <img src="assets/images/phases finals 25-26.webp" width="1080" height="1350" loading="lazy" alt="Safi Basketball Finals Poster">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/phases finals 25-26.webp')"><span>Full View</span></div>
     </div>
     <div class="work-info">
         <div class="work-tags">
@@ -100,7 +100,7 @@
     <div class="work-card reveal" data-category="design poster">
       <div class="work-preview">
         <img src="assets/images/1.webp" width="1080" height="1350" loading="lazy" alt="Match Day Poster">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/1.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Poster</span><span class="work-tag">Sports</span></div>
@@ -113,7 +113,7 @@
     <div class="work-card reveal" data-category="design social">
       <div class="work-preview">
         <img src="assets/images/3.webp" width="1080" height="1350" loading="lazy" alt="Match Result Graphic">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/3.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Social Media</span><span class="work-tag">Football</span></div>
@@ -126,7 +126,7 @@
     <div class="work-card reveal" data-category="design poster">
       <div class="work-preview">
         <img src="assets/images/4.webp" width="1080" height="1350" loading="lazy" alt="MatchDay Poster">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/4.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Poster</span><span class="work-tag">Basketball</span></div>
@@ -152,7 +152,7 @@
     <div class="work-card reveal" data-category="design social">
       <div class="work-preview">
         <img src="assets/images/6.webp" width="1080" height="1350" loading="lazy" alt="Match Result">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/6.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Match Result</span><span class="work-tag">Social Media</span></div>
@@ -178,7 +178,7 @@
     <div class="work-card reveal" data-category="design poster">
       <div class="work-preview">
         <img src="assets/images/12.webp" width="1414" height="2000" loading="lazy" alt="MatchDay Poster">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/12.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Poster</span><span class="work-tag">Basketball</span></div>
@@ -191,7 +191,7 @@
     <div class="work-card reveal" data-category="design poster">
       <div class="work-preview">
         <img src="assets/images/13.webp" width="1414" height="2000" loading="lazy" alt="MatchDay Poster">
-        <div class="upload-overlay"><span>Full View</span></div>
+        <div class="upload-overlay" onclick="openFullView('assets/images/13.webp')"><span>Full View</span></div>
       </div>
       <div class="work-info">
         <div class="work-tags"><span class="work-tag accent">Design</span><span class="work-tag">Poster</span><span class="work-tag">Basketball</span></div>
@@ -389,6 +389,16 @@ function updateFilter(filter) {
 
 filterBtns.forEach(btn => btn.addEventListener('click', () => updateFilter(btn.dataset.filter)));
 updateFilter('all');
+  function openFullView(src) {
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("imgFull");
+    modal.style.display = "block";
+    modalImg.src = src;
+}
 </script>
+  <div id="imageModal" class="modal" onclick="this.style.display='none'">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="imgFull">
+</div>
 </body>
 </html>
