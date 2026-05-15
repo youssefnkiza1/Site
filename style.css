@@ -340,12 +340,11 @@ footer { border-top: 1px solid var(--border); padding: 2rem 4rem; display: flex;
 .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: none; }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .pt-item { grid-template-columns: 1fr; gap: 1rem; }
   .pt-viz { max-width: 200px; }
   .pt-action { align-items: flex-start; flex-direction: row; }
-}
-@media (max-width: 768px) {
+  h1 { font-size: 24px !important; }
   nav { padding: 1.2rem 1.5rem; }
   .nav-links { display: none; }
   section, #upload-cta { padding: 4rem 1.5rem; }
